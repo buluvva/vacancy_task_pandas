@@ -2,17 +2,16 @@ import pandas as pd
 from datetime import timedelta
 from uuid import uuid4
 
-def get_groups():
-    df = pd.read_csv('TEST_DATASET.csv', delimiter=',')
+
+def get_groups(df):
     gb = df.groupby('customer_id')
     # session_id = uuid4()
     groups = []
     for name in gb.groups:
-        df = gb.get_group(name).sort_values('timestamp', ascending=True).reset_index(drop=True)
-        groups.append(sort_sessions(df))
+        cient = gb.get_group(name).sort_values('timestamp', ascending=True).reset_index(drop=True)
+        groups.append(sort_sessions(cient))
     df = pd.concat(groups).reset_index(drop=True)
     return df
-
 
 
 def sort_sessions(group: pd.DataFrame) -> pd.DataFrame:
@@ -30,9 +29,6 @@ def sort_sessions(group: pd.DataFrame) -> pd.DataFrame:
             group.at[i, 'session_id'] = session_id
     return group
 
-df = get_groups()
 
-
-
-
-
+df_raw = pd.read_csv('TEST_DATASET.csv', delimiter=',')
+df = get_groups(df_raw)
